@@ -35,9 +35,7 @@ async def get_top_chatters(
         await ctx.send("Please specify before and after times")
         return
 
-    print(
-        datetime.fromtimestamp(before, tz=pytz.timezone("America/New_York")),
-    )
+    await ctx.send("Starting fetch... this will take some time")
 
     messages = {}  # user: count
 
@@ -78,6 +76,13 @@ async def get_top_chatters(
             value=f"{user.mention}: {count} messages",
             inline=False,
         )
+
+    total_count = 0
+    for _, count in sorted_messages[:limit]:
+        total_count += count
+    embed.set_footer(
+        text=f"A total of {total_count} messages sent by {limit} users across {len(channels)} channels"
+    )
 
     await ctx.reply(embed=embed)
 
